@@ -1,101 +1,67 @@
-import { Link } from "react-router-dom";
+import { useState, useMemo } from "react";
+import { STAGES, StageId } from "@/data/ar-types";
 import { MOCK_CLIENTS } from "@/data/ar-mock-data";
-import { STAGES } from "@/data/ar-types";
-import { cn } from "@/lib/utils";
+import { StageSelector } from "@/components/StageSelector";
+import { ClientList } from "@/components/ClientList";
+import { ActionPanel } from "@/components/ActionPanel";
 
-const urgencyBar: Record<number, string> = {
-  1: "bg-urgency-1", 2: "bg-urgency-2", 3: "bg-urgency-3",
-  4: "bg-urgency-4", 5: "bg-urgency-5", 6: "bg-urgency-6", 7: "bg-urgency-7",
-};
+export default function TriageView() {
+  const [selectedStageId, setSelectedStageId] = useState<StageId | null>(null);
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
 
-const Index = () => {
-  const totalOutstanding = MOCK_CLIENTS.reduce((acc, c) => acc + c.invoiceAmount, 0);
-  const totalClients = MOCK_CLIENTS.length;
-  const avgDaysOverdue = Math.round(MOCK_CLIENTS.reduce((acc, c) => acc + c.daysOverdue, 0) / totalClients);
+  const clientCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    STAGES.forEach(s => { counts[s.id] = 0; });
+    MOCK_CLIENTS.forEach(c => { counts[c.stageId] = (counts[c.stageId] || 0) + 1; });
+    return counts;
+  }, []);
 
-  const stageCounts = STAGES.map(s => ({
-    ...s,
-    count: MOCK_CLIENTS.filter(c => c.stageId === s.id).length,
-    amount: MOCK_CLIENTS.filter(c => c.stageId === s.id).reduce((acc, c) => acc + c.invoiceAmount, 0),
-  }));
+  const filteredClients = useMemo(() =>
+    selectedStageId ? MOCK_CLIENTS.filter(c => c.stageId === selectedStageId) : [],
+    [selectedStageId]
+  );
+
+  const selectedClient = useMemo(() =>
+    selectedClientId ? MOCK_CLIENTS.find(c => c.id === selectedClientId) || null : null,
+    [selectedClientId]
+  );
+
+  const handleSelectStage = (stageId: string) => {
+    setSelectedStageId(stageId as StageId);
+    setSelectedClientId(null);
+  };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="h-14 border-b border-border bg-card flex items-center justify-between px-5">
-        <div className="flex items-center gap-6">
-          <h1 className="text-base font-bold text-foreground tracking-tight">AR Portal</h1>
-          <nav className="flex items-center gap-1">
-            <span className="text-sm font-medium text-foreground bg-surface-active px-3 py-1.5 rounded-md">
-              Overview
-            </span>
-            <Link
-              to="/triage"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-md hover:bg-surface-hover"
-            >
-              All Clients
-            </Link>
-          </nav>
-        </div>
+    <div className="flex flex-col h-screen bg-background">
+      {/* Top bar */}
+      <header className="h-14 border-b border-border bg-card flex items-center justify-between px-5 shrink-0">
+        <h1 className="text-base font-bold text-foreground tracking-tight">AR Portal</h1>
+        <span className="text-xs text-muted-foreground font-mono">
+          {MOCK_CLIENTS.length} accounts
+        </span>
       </header>
 
-      <main className="max-w-5xl mx-auto p-6">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-foreground mb-1">Accounts Receivable Overview</h2>
-          <p className="text-sm text-muted-foreground">Summary of outstanding accounts and escalation stages</p>
+      {/* 3-column layout */}
+      <div className="flex flex-1 overflow-hidden">
+        <div className="w-[280px] border-r border-border bg-card overflow-y-auto ar-scrollbar shrink-0">
+          <StageSelector
+            stages={STAGES}
+            selectedStageId={selectedStageId}
+            clientCounts={clientCounts}
+            onSelectStage={handleSelectStage}
+          />
         </div>
-
-        {/* Summary cards */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          {[
-            { label: "Total Outstanding", value: `$${(totalOutstanding / 1000).toFixed(0)}k` },
-            { label: "Active Accounts", value: totalClients.toString() },
-            { label: "Avg Days Overdue", value: avgDaysOverdue.toString() },
-          ].map((card) => (
-            <div key={card.label} className="bg-card rounded-xl border border-border p-5">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">{card.label}</p>
-              <p className="text-3xl font-bold text-foreground font-mono">{card.value}</p>
-            </div>
-          ))}
+        <div className="w-[340px] border-r border-border bg-card overflow-y-auto ar-scrollbar shrink-0">
+          <ClientList
+            clients={filteredClients}
+            selectedClientId={selectedClientId}
+            onSelectClient={setSelectedClientId}
+          />
         </div>
-
-        {/* Stage breakdown */}
-        <div className="bg-card rounded-xl border border-border">
-          <div className="p-5 border-b border-border flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-foreground">Escalation Pipeline</h3>
-            <Link
-              to="/triage"
-              className="text-xs font-medium text-primary hover:underline"
-            >
-              Open Triage View →
-            </Link>
-          </div>
-          <div className="divide-y divide-border">
-            {stageCounts.map((stage) => (
-              <Link
-                key={stage.id}
-                to="/triage"
-                className="flex items-center gap-4 px-5 py-3.5 hover:bg-surface-hover transition-colors"
-              >
-                <div className={cn("w-1.5 h-8 rounded-full shrink-0", urgencyBar[stage.urgency])} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground">{stage.name}</p>
-                </div>
-                <span className="text-sm font-mono text-muted-foreground w-20 text-right">
-                  ${(stage.amount / 1000).toFixed(0)}k
-                </span>
-                <span className={cn(
-                  "text-xs font-semibold rounded-full px-2.5 py-0.5",
-                  stage.count > 0 ? `${urgencyBar[stage.urgency].replace("bg-", "bg-")}/15 text-foreground` : "bg-muted text-muted-foreground"
-                )}>
-                  {stage.count} {stage.count === 1 ? "client" : "clients"}
-                </span>
-              </Link>
-            ))}
-          </div>
+        <div className="flex-1 bg-card overflow-hidden">
+          <ActionPanel client={selectedClient} />
         </div>
-      </main>
+      </div>
     </div>
   );
-};
-
-export default Index;
+}

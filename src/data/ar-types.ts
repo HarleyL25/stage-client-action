@@ -34,16 +34,19 @@ export interface Client {
   stageId: StageId;
 }
 
-export interface ActionItem {
+export type ActionType = "email" | "call" | "note" | "escalate" | "ops" | "meeting" | "research" | "decision" | "finance" | "resolve";
+
+export interface WorkflowAction {
   id: string;
-  text: string;
-  checked: boolean;
+  label: string;
+  description: string;
+  type: ActionType;
   indent?: boolean;
 }
 
 export interface ActionGroup {
   condition?: string;
-  items: ActionItem[];
+  actions: WorkflowAction[];
 }
 
 export const STAGES: Stage[] = [
