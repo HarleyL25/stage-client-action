@@ -32,6 +32,9 @@ export interface Client {
   lastActionDaysAgo: number;
   subStatus: SubStatus;
   stageId: StageId;
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
 }
 
 export type ActionType = "email" | "call" | "note" | "escalate" | "ops" | "meeting" | "research" | "decision" | "finance" | "resolve";
