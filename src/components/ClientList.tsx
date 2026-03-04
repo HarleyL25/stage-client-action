@@ -1,4 +1,4 @@
-import { Client, SubStatus } from "@/data/ar-types";
+import { Client } from "@/data/ar-types";
 import { cn } from "@/lib/utils";
 
 interface ClientListProps {
@@ -56,13 +56,13 @@ export function ClientList({ clients, selectedClientId, onSelectClient }: Client
               <span className="text-xs font-medium text-muted-foreground">
                 Day {client.daysOverdue} overdue
               </span>
+              <span className="text-[11px] font-medium rounded-full bg-muted px-2 py-0.5 text-muted-foreground border border-border shrink-0">
+                {client.subStatus}
+              </span>
             </div>
-            <p className="text-xs text-muted-foreground mb-2">
+            <p className="text-xs text-muted-foreground">
               Last: {client.lastAction} — {client.lastActionDaysAgo === 0 ? "today" : `${client.lastActionDaysAgo}d ago`}
             </p>
-            <span className="inline-block text-[10px] font-semibold uppercase tracking-wide rounded-md px-2 py-0.5 bg-muted text-muted-foreground border border-border">
-              {client.subStatus}
-            </span>
           </button>
         );
       })}

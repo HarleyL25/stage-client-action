@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun run tsc --noEmit)",
+      "Bash(/c/Users/harley.al/AppData/Roaming/npm/npx.cmd tsc --noEmit)",
+      "Bash(node_modules/.bin/tsc --noEmit)"
+    ]
+  }
+}

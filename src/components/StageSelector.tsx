@@ -36,6 +36,9 @@ export function StageSelector({ stages, selectedStageId, clientCounts, onSelectS
               )}>
                 {stage.name}
               </span>
+              <span className="text-[11px] text-muted-foreground/70 mt-0.5 block">
+                {stage.dayRange}
+              </span>
             </div>
             <span className={cn(
               "text-xs font-semibold rounded-full px-2 py-0.5 shrink-0",
