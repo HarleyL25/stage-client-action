@@ -30,33 +30,19 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 88%;
+    --border: 220 13% 86%;
     --input: 220 13% 88%;
     --ring: 220 70% 45%;
 
     --radius: 0.5rem;
 
-    /* Urgency scale — yellow to deep red */
-    --urgency-1: 45 93% 47%;
-    --urgency-1-foreground: 45 93% 12%;
-    --urgency-2: 30 90% 50%;
-    --urgency-2-foreground: 30 90% 12%;
-    --urgency-3: 24 95% 50%;
-    --urgency-3-foreground: 0 0% 100%;
-    --urgency-4: 16 90% 45%;
-    --urgency-4-foreground: 0 0% 100%;
-    --urgency-5: 0 80% 48%;
-    --urgency-5-foreground: 0 0% 100%;
-    --urgency-6: 0 70% 35%;
-    --urgency-6-foreground: 0 0% 100%;
-    --urgency-7: 0 50% 15%;
-    --urgency-7-foreground: 0 0% 95%;
-
-    /* Dashboard surface */
-    --surface: 0 0% 100%;
-    --surface-hover: 220 14% 97%;
-    --surface-active: 220 50% 95%;
-    --surface-border: 220 13% 90%;
+    /* Semantic status colors */
+    --success: 152 60% 40%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 38 92% 12%;
+    --info: 210 70% 50%;
+    --info-foreground: 0 0% 100%;
 
     --sidebar-background: 220 20% 14%;
     --sidebar-foreground: 220 14% 80%;
@@ -83,17 +69,192 @@
   }
 }
 
-/* Custom scrollbar for columns */
+/* ── Custom scrollbar ────────────────────────────────────────────── */
+
 .ar-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
 }
 .ar-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 .ar-scrollbar::-webkit-scrollbar-thumb {
   background: hsl(var(--border));
-  border-radius: 2px;
+  border-radius: 3px;
 }
 .ar-scrollbar::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground));
+}
+
+/* ── Overdue severity badges ─────────────────────────────────────── */
+
+.severity-low {
+  background: hsl(210 70% 93%);
+  color: hsl(210 65% 30%);
+  border: 1px solid hsl(210 55% 82%);
+}
+.severity-medium {
+  background: hsl(38 90% 92%);
+  color: hsl(30 80% 30%);
+  border: 1px solid hsl(38 70% 80%);
+}
+.severity-high {
+  background: hsl(38 90% 92%);
+  color: hsl(30 80% 30%);
+  border: 1px solid hsl(38 70% 80%);
+}
+.severity-critical {
+  background: hsl(0 80% 93%);
+  color: hsl(0 70% 32%);
+  border: 1px solid hsl(0 60% 80%);
+}
+
+/* ── Payment status badges ───────────────────────────────────────── */
+
+.badge-unpaid {
+  background: hsl(220 14% 93%);
+  color: hsl(220 10% 40%);
+  border: 1px solid hsl(220 12% 85%);
+}
+.badge-partial {
+  background: hsl(38 90% 92%);
+  color: hsl(30 80% 30%);
+  border: 1px solid hsl(38 70% 80%);
+}
+.badge-disputed {
+  background: hsl(0 80% 93%);
+  color: hsl(0 70% 35%);
+  border: 1px solid hsl(0 60% 80%);
+}
+.badge-promised {
+  background: hsl(210 80% 92%);
+  color: hsl(210 70% 30%);
+  border: 1px solid hsl(210 60% 80%);
+}
+.badge-paid {
+  background: hsl(152 50% 90%);
+  color: hsl(152 60% 25%);
+  border: 1px solid hsl(152 40% 80%);
+}
+
+/* ── Tabs underline indicator ────────────────────────────────────── */
+
+.tab-indicator {
+  position: relative;
+}
+.tab-indicator::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: hsl(var(--primary));
+  border-radius: 1px 1px 0 0;
+}
+
+/* ── Follow-up type badges ──────────────────────────────────────── */
+
+.badge-email { background: hsl(210 80% 94%); color: hsl(210 70% 35%); border: 1px solid hsl(210 60% 85%); }
+.badge-call { background: hsl(38 90% 93%); color: hsl(30 80% 32%); border: 1px solid hsl(38 70% 82%); }
+.badge-note { background: hsl(220 14% 94%); color: hsl(220 10% 42%); border: 1px solid hsl(220 12% 86%); }
+.badge-escalation { background: hsl(0 80% 94%); color: hsl(0 70% 36%); border: 1px solid hsl(0 60% 82%); }
+
+/* ── Animations ──────────────────────────────────────────────────── */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.15s ease-out;
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-in {
+  animation: slide-in 0.2s ease-out both;
+}
+
+/* ── Dashboard animations ────────────────────────────────────────── */
+
+@keyframes dash-fade-in {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-dash-fade-in {
+  animation: dash-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes dash-slide-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-dash-slide-in {
+  animation: dash-slide-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Command palette ─────────────────────────────────────────────── */
+
+[cmdk-overlay] {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+}
+[cmdk-dialog] {
+  background: hsl(var(--card));
+  border-radius: 12px;
+  border: 2px solid hsl(var(--border));
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+[cmdk-input] {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  border: none;
+  border-bottom: 1px solid hsl(var(--border));
+  background: transparent;
+  color: hsl(var(--foreground));
+  outline: none;
+  font-family: var(--font-sans);
+}
+[cmdk-input]::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+[cmdk-list] {
+  max-height: 340px;
+  overflow-y: auto;
+  padding: 6px;
+}
+[cmdk-item] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: hsl(var(--foreground));
+  transition: background 0.1s;
+}
+[cmdk-item][data-selected="true"] {
+  background: hsl(var(--accent));
+}
+[cmdk-item]:hover {
+  background: hsl(var(--muted));
+}
+[cmdk-group-heading] {
+  padding: 8px 12px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: hsl(var(--muted-foreground));
+}
+[cmdk-empty] {
+  padding: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: hsl(var(--muted-foreground));
 }

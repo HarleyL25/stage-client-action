@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bunx tsc --noEmit)",
+      "Bash(mv server/db.js server/db.cjs)",
+      "Bash(mv server/test-connection.js server/test-connection.cjs)",
+      "Bash(node server/test-connection.cjs)",
+      "Bash(node server/explore-finance-ui.cjs)",
+      "Bash(./node_modules/.bin/tsc --noEmit)"
+    ]
+  }
+}
