@@ -48,15 +48,31 @@ export function computeNextStep(followUps: FollowUp[], daysOverdue: number): str
   if (hasOpsEscalation && daysSinceLast >= 5) return "Escalate to Trevor";
   if (hasOpsEscalation) return "Awaiting Ops response";
 
-  // Urgency override based on days overdue with insufficient escalation
-  if (daysOverdue >= 45 && emails.length >= 2) return "Escalate to Ops — " + daysOverdue + " days overdue";
-  if (daysOverdue >= 30 && emails.length >= 2 && calls.length >= 1) return "Send final reminder or escalate to Ops";
+  // Day 31+: Must be escalated — business decision required
+  if (daysOverdue >= 31 && !hasOpsEscalation) {
+    return "Share problematic list with Sales/Ops — escalate to Trevor & Ofir";
+  }
 
-  // No escalation yet — follow-up sequence
-  if (emails.length >= 3 && calls.length >= 3) return "Escalate to Ops";
-  if (emails.length >= 2 && calls.length >= 2 && daysSinceLast >= 2) return "Send final reminder or escalate to Ops";
-  if (calls.length >= 2 && daysSinceLast >= 2) return "Send second reminder email";
-  if (emails.length >= 1 && calls.length === 0 && daysSinceLast >= 2) return "Call the client";
+  // Day 21-30: Problematic list stage — request Ops/Sales intervention
+  if (daysOverdue >= 21 && emails.length >= 3) {
+    return "Share with Sales/Ops team — research alternative contacts";
+  }
+
+  // Day 15-20: 3rd follow-up stage — 8+ calls/week, request Ops intervention
+  if (daysOverdue >= 15 && emails.length >= 2) {
+    if (calls.length < 8) return "Increase call frequency (8+/week) — send 3rd reminder";
+    return "Request Ops team to intervene and follow up with client";
+  }
+
+  // Day 8-14: 2nd follow-up stage — 5-7 calls/week
+  if (daysOverdue >= 8 && emails.length >= 1) {
+    if (daysSinceLast >= 2 && emails.length < 2) return "Send 2nd reminder email — increase calls to 5-7/week";
+    if (calls.length < 3 && daysSinceLast >= 1) return "Call client (target: 5-7 calls/week)";
+    return "Continue follow-up calls — check for OPS concerns";
+  }
+
+  // Day 1-7: First follow-up stage — 3 calls/week
+  if (emails.length >= 1 && calls.length === 0 && daysSinceLast >= 1) return "Call the client (target: 3 calls/week)";
   if (calls.length >= 1 && emails.length < 2 && daysSinceLast >= 2) return "Send follow-up email";
   if (daysSinceLast >= 3) return "Follow up — no activity in " + daysSinceLast + " days";
 

@@ -1,4 +1,4 @@
-import { FollowUp, PaymentRecord } from "./ar-types";
+import { FollowUp, PaymentRecord, MonthlyRevenue } from "./ar-types";
 
 // ── Raw invoice shape (matches API flat rows) ─────────────────────
 
@@ -347,4 +347,29 @@ export const MOCK_PAYMENT_HISTORY: Record<string, PaymentRecord[]> = {
     { invoiceNumber: "INV-2025-0900", amount: 4800, invoiceDate: "2025-10-01", dueDate: "2025-10-31", paidDate: "2025-11-02", daysToPayAfterDue: 2 },
     { invoiceNumber: "INV-2025-0780", amount: 5100, invoiceDate: "2025-08-01", dueDate: "2025-08-31", paidDate: "2025-09-01", daysToPayAfterDue: 1 },
   ],
+};
+
+// ── Mock monthly revenue (Trevor's dashboard ask) ─────────────────
+
+export const MOCK_MONTHLY_REVENUE: MonthlyRevenue[] = [
+  { month: "2026-03", totalBilled: 6_600_000, totalCollected: 4_210_000, outstanding: 2_390_000 },
+  { month: "2026-02", totalBilled: 5_980_000, totalCollected: 4_850_000, outstanding: 1_130_000 },
+  { month: "2026-01", totalBilled: 6_120_000, totalCollected: 5_690_000, outstanding: 430_000 },
+  { month: "2025-12", totalBilled: 5_450_000, totalCollected: 5_310_000, outstanding: 140_000 },
+];
+
+// ── Mock team assignments (maps invoice ID → team member ID) ──────
+
+export const MOCK_ASSIGNMENTS: Record<string, string> = {
+  "inv-001": "deepak",  "inv-002": "deepak",  "inv-003": "deepak",
+  "inv-004": "priya",
+  "inv-005": "rahul",   "inv-006": "rahul",
+  "inv-007": "anita",   "inv-008": "anita",
+  "inv-009": "deepak",
+  "inv-010": "priya",   "inv-011": "priya",
+  "inv-012": "rahul",
+  "inv-013": "anita",
+  "inv-014": "deepak",  "inv-015": "deepak",
+  "inv-016": "priya",
+  "inv-017": "rahul",
 };

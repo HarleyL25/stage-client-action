@@ -23,7 +23,7 @@ export function FilterDropdown({
       <Popover.Trigger asChild>
         <button
           className={cn(
-            "inline-flex items-center gap-1.5 text-[12px] font-medium rounded-lg border h-8 px-3 transition-all",
+            "inline-flex items-center gap-1 text-[10px] font-medium rounded-md border h-6 px-2 transition-all",
             "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/20",
             active
               ? "border-primary text-primary font-semibold bg-primary/10"
